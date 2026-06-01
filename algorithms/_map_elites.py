@@ -31,6 +31,24 @@ class MAPElites(BaseOptimizer):
         dynamic_threshold_epochs = 2000,
         dynamic_threshold_warmup_size = None,
         crossover_type = 'order',
+        lns_enabled = False,
+        lns_probability = 0.0,
+        lns_stagnation_epochs = 100,
+        lns_stagnation_probability = 0.4,
+        lns_remove_taxa_min = 3,
+        lns_remove_taxa_max = 8,
+        eda_enabled = False,
+        eda_stagnation_epochs = 150,
+        eda_restart_probability = 0.3,
+        eda_top_k = 10,
+        eda_temperature = 0.2,
+        threshold_accepting_enabled = False,
+        threshold_accepting_start = 100.0,
+        threshold_accepting_end = 0.0,
+        threshold_accepting_epochs = 2000,
+        diversity_bonus_enabled = False,
+        diversity_bonus_weight = 50.0,
+        diversity_bonus_epochs = 2000,
         # archive_init_ratio: float = 0.8,
         archive: Optional[Archive] = None,
         policy_path=None,
@@ -56,6 +74,24 @@ class MAPElites(BaseOptimizer):
         self.dynamic_threshold_epochs = dynamic_threshold_epochs
         self.dynamic_threshold_warmup_size = dynamic_threshold_warmup_size
         self.crossover_type = crossover_type
+        self.lns_enabled = lns_enabled
+        self.lns_probability = lns_probability
+        self.lns_stagnation_epochs = lns_stagnation_epochs
+        self.lns_stagnation_probability = lns_stagnation_probability
+        self.lns_remove_taxa_min = lns_remove_taxa_min
+        self.lns_remove_taxa_max = lns_remove_taxa_max
+        self.eda_enabled = eda_enabled
+        self.eda_stagnation_epochs = eda_stagnation_epochs
+        self.eda_restart_probability = eda_restart_probability
+        self.eda_top_k = eda_top_k
+        self.eda_temperature = eda_temperature
+        self.threshold_accepting_enabled = threshold_accepting_enabled
+        self.threshold_accepting_start = threshold_accepting_start
+        self.threshold_accepting_end = threshold_accepting_end
+        self.threshold_accepting_epochs = threshold_accepting_epochs
+        self.diversity_bonus_enabled = diversity_bonus_enabled
+        self.diversity_bonus_weight = diversity_bonus_weight
+        self.diversity_bonus_epochs = diversity_bonus_epochs
         self.device = device
         print(f"Using device: {self.device}")
         self.mutation_ops = ['swap', 'insert', 'reversal', 'shuffle', 'shift']
@@ -63,6 +99,8 @@ class MAPElites(BaseOptimizer):
         self.mutation_successes = {op: 0 for op in self.mutation_ops}
         self.pending_mutation_types = []
         self.tell_count = 0
+        self.best_fitness_seen = None
+        self.no_improvement_count = 0
         
         if archive is not None:
             self.archive = archive
@@ -161,6 +199,8 @@ class MAPElites(BaseOptimizer):
             'mutation_attempts': self.mutation_attempts,
             'mutation_successes': self.mutation_successes,
             'tell_count': self.tell_count,
+            'best_fitness_seen': self.best_fitness_seen,
+            'no_improvement_count': self.no_improvement_count,
         }
 
     def load_ckpt_dict(self, ckpt_dict):
@@ -168,6 +208,8 @@ class MAPElites(BaseOptimizer):
         self.mutation_attempts = ckpt_dict.get('mutation_attempts', self.mutation_attempts)
         self.mutation_successes = ckpt_dict.get('mutation_successes', self.mutation_successes)
         self.tell_count = ckpt_dict.get('tell_count', self.tell_count)
+        self.best_fitness_seen = ckpt_dict.get('best_fitness_seen', None)
+        self.no_improvement_count = ckpt_dict.get('no_improvement_count', 0)
         # fitness 越大越好
         best_idx = np.argmax(self.archive.fitnesses)
         best_x = self.archive.individuals[best_idx]
@@ -253,6 +295,99 @@ class MAPElites(BaseOptimizer):
         else:
             raise NotImplementedError
         return next_x
+
+    def _should_use_lns(self):
+        if not self.lns_enabled:
+            return False
+        probability = self.lns_probability
+        if self.no_improvement_count >= self.lns_stagnation_epochs:
+            probability = max(probability, self.lns_stagnation_probability)
+        return random.random() < probability
+
+    def _lns_destroy_repair(self, x):
+        x = np.asarray(x)
+        taxa_count = self.dims // 2
+        remove_min = max(1, min(self.lns_remove_taxa_min, taxa_count))
+        remove_max = max(remove_min, min(self.lns_remove_taxa_max, taxa_count))
+        remove_count = random.randint(remove_min, remove_max)
+        removed_taxa = set(np.random.choice(taxa_count, remove_count, replace=False).tolist())
+        removed_events = set()
+        for taxon in removed_taxa:
+            removed_events.add(2 * taxon)
+            removed_events.add(2 * taxon + 1)
+
+        partial = [int(event) for event in x if int(event) not in removed_events]
+        taxa_order = list(removed_taxa)
+        random.shuffle(taxa_order)
+
+        for taxon in taxa_order:
+            fad = 2 * taxon
+            lad = 2 * taxon + 1
+            fad_pos = random.randint(0, len(partial))
+            partial.insert(fad_pos, fad)
+            lad_pos = random.randint(fad_pos + 1, len(partial))
+            partial.insert(lad_pos, lad)
+        return np.array(partial, dtype=x.dtype)
+
+    def _should_use_eda(self):
+        if not self.eda_enabled:
+            return False
+        if len(self.archive) < 3:
+            return False
+        if self.no_improvement_count < self.eda_stagnation_epochs:
+            return False
+        return random.random() < self.eda_restart_probability
+
+    def _build_precedence_matrix(self):
+        top_k = min(self.eda_top_k, len(self.archive))
+        elite_indices = np.argsort(self.archive.fitnesses)[-top_k:]
+        elite_fitnesses = np.array([self.archive.fitnesses[idx] for idx in elite_indices], dtype=float)
+        weights = elite_fitnesses - np.min(elite_fitnesses)
+        if np.allclose(weights.sum(), 0.0):
+            weights = np.ones_like(weights)
+        else:
+            weights = weights + 1e-6
+
+        precedence = np.zeros((self.dims, self.dims), dtype=float)
+        for idx, weight in zip(elite_indices, weights):
+            individual = np.asarray(self.archive.individuals[idx], dtype=int)
+            positions = np.empty(self.dims, dtype=int)
+            positions[individual] = np.arange(self.dims)
+            precedence += weight * (positions[:, None] < positions[None, :])
+
+        precedence /= weights.sum()
+        np.fill_diagonal(precedence, 0.0)
+        return precedence
+
+    def _sample_from_precedence_matrix(self):
+        precedence = self._build_precedence_matrix()
+        unused = set(range(self.dims))
+        sampled = []
+        dtype = np.asarray(self.archive.individuals[0]).dtype
+
+        while unused:
+            feasible = []
+            for event in unused:
+                if event % 2 == 0 or (event - 1) not in unused:
+                    feasible.append(event)
+
+            scores = []
+            denominator = max(1, len(unused) - 1)
+            for event in feasible:
+                score = sum(precedence[event, other] for other in unused if other != event) / denominator
+                scores.append(score)
+
+            scores = np.array(scores, dtype=float)
+            temperature = max(float(self.eda_temperature), 1e-6)
+            logits = scores / temperature
+            logits -= np.max(logits)
+            probs = np.exp(logits)
+            probs /= probs.sum()
+            selected = int(np.random.choice(feasible, p=probs))
+            sampled.append(selected)
+            unused.remove(selected)
+
+        return np.array(sampled, dtype=dtype)
     
 
     def _update_desc(self, offspring):
@@ -294,6 +429,8 @@ class MAPElites(BaseOptimizer):
                 return True, -1
             elif fitness >= self.archive.fitnesses[0]:
                 return True, 0
+            elif self._accept_worse_similar_candidate(fitness, self.archive.fitnesses[0], self.archive.descriptors[0]):
+                return True, -1
             else:
                 return False, -1
         else:
@@ -303,6 +440,8 @@ class MAPElites(BaseOptimizer):
                 return True, -1 
             elif fitness >= self.archive.fitnesses[max_index]:
                 return True, max_index
+            elif self._accept_worse_similar_candidate(fitness, self.archive.fitnesses[max_index], max_corr):
+                return True, -1
             else:
                 return False, -1
 
@@ -322,6 +461,24 @@ class MAPElites(BaseOptimizer):
             end = self.correlation_threshold
         progress = min(1.0, self.tell_count / max(1, self.dynamic_threshold_epochs))
         return start + (end - start) * progress
+
+    def _current_acceptance_threshold(self):
+        if not self.threshold_accepting_enabled:
+            return 0.0
+        progress = min(1.0, self.tell_count / max(1, self.threshold_accepting_epochs))
+        return self.threshold_accepting_start + (self.threshold_accepting_end - self.threshold_accepting_start) * progress
+
+    def _current_diversity_bonus_weight(self):
+        if not self.diversity_bonus_enabled:
+            return 0.0
+        progress = min(1.0, self.tell_count / max(1, self.diversity_bonus_epochs))
+        return self.diversity_bonus_weight * (1.0 - progress)
+
+    def _accept_worse_similar_candidate(self, fitness, reference_fitness, max_corr):
+        acceptance_threshold = self._current_acceptance_threshold()
+        diversity = max(0.0, 1.0 - float(max_corr))
+        diversity_bonus = self._current_diversity_bonus_weight() * diversity
+        return fitness + diversity_bonus >= reference_fitness - acceptance_threshold
 
     def _survival(self, offsprings, offsprings_fit, mutation_types=None):
         if mutation_types is None:
@@ -496,6 +653,13 @@ class MAPElites(BaseOptimizer):
                                                                self.archive.fitnesses[idx1],
                                                                self.archive.fitnesses[idx2], cur_x_best)
                     self.pending_mutation_types.append(None)
+                elif self._should_use_eda():
+                    x_nxt = self._sample_from_precedence_matrix()
+                    self.pending_mutation_types.append('eda')
+                elif self._should_use_lns():
+                    x_nxt = self._crossover(x1, x2)
+                    x_nxt = self._lns_destroy_repair(x_nxt)
+                    self.pending_mutation_types.append('lns')
                 else:
                     x_nxt = self._crossover(x1, x2)
                     x_nxt, mutation_type = self._mutation(x_nxt, n_repeats)
@@ -528,6 +692,13 @@ class MAPElites(BaseOptimizer):
         
         # if X_to_process is not None:
         #     self._survival(X_to_process, Y_to_process)
+        if len(Y) > 0:
+            current_best = max(Y)
+            if self.best_fitness_seen is None or current_best > self.best_fitness_seen:
+                self.best_fitness_seen = current_best
+                self.no_improvement_count = 0
+            else:
+                self.no_improvement_count += 1
         self._survival(X, Y, self.pending_mutation_types)
         self.tell_count += 1
 

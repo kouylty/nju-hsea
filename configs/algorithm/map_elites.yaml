@@ -17,6 +17,24 @@ model:
     dynamic_threshold_epochs: 2000
     dynamic_threshold_warmup_size: null
     crossover_type: 'pmx'
+    lns_enabled: False
+    lns_probability: 0.1
+    lns_stagnation_epochs: 100
+    lns_stagnation_probability: 0.4
+    lns_remove_taxa_min: 3
+    lns_remove_taxa_max: 8
+    eda_enabled: False
+    eda_stagnation_epochs: 150
+    eda_restart_probability: 0.3
+    eda_top_k: 10
+    eda_temperature: 0.2
+    threshold_accepting_enabled: False
+    threshold_accepting_start: 100.0
+    threshold_accepting_end: 0.0
+    threshold_accepting_epochs: 2000
+    diversity_bonus_enabled: False
+    diversity_bonus_weight: 50.0
+    diversity_bonus_epochs: 2000
     device: 'cpu'
 
     

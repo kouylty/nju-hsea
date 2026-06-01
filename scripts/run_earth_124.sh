@@ -29,6 +29,10 @@ init_sampler_type='init_v3'
 device="cpu"
 adaptive_correlation=false
 local_search=false
+lns=false
+eda=false
+threshold_accepting=false
+diversity_bonus=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -42,6 +46,22 @@ while [[ $# -gt 0 ]]; do
             ;;
         --local-search)
             local_search="$2"
+            shift 2
+            ;;
+        --lns)
+            lns="$2"
+            shift 2
+            ;;
+        --eda)
+            eda="$2"
+            shift 2
+            ;;
+        --threshold-accepting)
+            threshold_accepting="$2"
+            shift 2
+            ;;
+        --diversity-bonus)
+            diversity_bonus="$2"
             shift 2
             ;;
         *)
@@ -70,6 +90,10 @@ do
         algorithm.model.device=$device \
         mutation=$qd_mutation_type \
         adaptive_correlation=$adaptive_correlation \
+        algorithm.model.lns_enabled=$lns \
+        algorithm.model.eda_enabled=$eda \
+        algorithm.model.threshold_accepting_enabled=$threshold_accepting \
+        algorithm.model.diversity_bonus_enabled=$diversity_bonus \
         local_search.enabled=$local_search \
         local_search.freq=50 \
         local_search.top_k=1 \
