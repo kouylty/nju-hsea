@@ -1,0 +1,13 @@
+name: 'UniRLEA_Large_Metadata_ngs_withfullmask_window'
+
+model:
+    _target_: algorithms.EA
+    pop_size: 20
+    init_sampler_type: 'permutation' # permutation
+    selection_type: 'elite' # rank_based_prioritized
+    mutation_type: 'insert'
+    crossover_type: 'pmx'
+    num_segments: 32
+    policy_path: 'models/dim124_epoch2000.pth' # 'dim278_epoch2000_base.pth' # policy_path: 'dqn_dim278.pth'
+    device: 'cuda:0'
+    

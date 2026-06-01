@@ -1,0 +1,22 @@
+name: 'map_elites'
+
+model:
+    _target_: algorithms.MAPElites
+    correlation_threshold: 0.07 # 0.07 # 0.065 # 0.0075
+    archive_size: 60
+    pop_size: 20
+    init_sampler_type: 'permutation'
+    selection_type: 'tournament'
+    tournament_size: 3
+    mutation_type: 'adaptive_mix'
+    adaptive_phase_epochs: 2000
+    adaptive_prior_weight: 0.7
+    dynamic_correlation_threshold: False
+    dynamic_threshold_start: null
+    dynamic_threshold_end: null
+    dynamic_threshold_epochs: 2000
+    dynamic_threshold_warmup_size: null
+    crossover_type: 'pmx'
+    device: 'cpu'
+
+    

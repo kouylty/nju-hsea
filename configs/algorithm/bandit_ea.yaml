@@ -1,0 +1,10 @@
+name: 'bandit_ea'
+
+model:
+    _target_: algorithms.BanditEA
+    pop_size: 20
+    init_sampler_type: 'init_v3' # permutation
+    selection_type: 'elite' # rank_based_prioritized
+    bandit_algo: "ucb" # epsilon_greedy
+    # mutation_type: 'mix'
+    # crossover_type: 'pmx'

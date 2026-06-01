@@ -1,0 +1,12 @@
+name: 'RLEA'
+
+model:
+    _target_: algorithms.EA
+    pop_size: 20
+    init_sampler_type: 'permutation' # permutation
+    selection_type: 'rank_based_prioritized' # rank_based_prioritized
+    mutation_type: 'mix'
+    crossover_type: 'pmx'
+    policy_path: 'models/dim124_epoch2000.pth' # 'dim278_epoch2000_base.pth' # policy_path: 'dqn_dim278.pth'
+    device: 'cuda:0'
+    

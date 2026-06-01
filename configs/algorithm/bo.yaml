@@ -1,0 +1,15 @@
+name: 'bo'
+
+pop_size: 20
+
+model:
+    _target_: algorithms.BO
+    active_dims: null
+    n_init: 10
+    init_sampler_type: 'permutation'
+    acqf_init_sampler_type: 'permutation'
+    acqf_type: 'EI'
+    acqf_opt_type: 'ea'
+    kernel_type: 'matern'
+    fillin_type: 'best_pos'
+    device: 'cpu'

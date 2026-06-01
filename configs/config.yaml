@@ -1,0 +1,21 @@
+defaults:
+    - _self_
+    - task: qap
+    - algorithm: bo
+
+epochs: 15
+project: 'earth-278'
+seed: 2022
+use_checkpoint: False
+save_checkpoint: False
+mutation: null
+adaptive_correlation: null
+
+local_search:
+    enabled: False
+    freq: 50
+    top_k: 1
+    num_neighbors: 4
+    mutation_types:
+        - insert
+        - swap

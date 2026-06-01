@@ -1,0 +1,6 @@
+name: 'random'
+
+model: 
+    _target_: algorithms.Random
+    active_dims: 15
+    fillin_type: 'best_pos'

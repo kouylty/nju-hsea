@@ -1,0 +1,16 @@
+name: 'UniRLQD_Large_Metadata_ngs'
+
+model:
+    _target_: algorithms.MAPElites
+    correlation_threshold: 0.07 # 0.07 # 0.065 # 0.0075
+    archive_size: 20
+    pop_size: 20
+    init_sampler_type: 'permutation'
+    selection_type: 'random'
+    mutation_type: 'insert'
+    crossover_type: 'pmx'
+    num_segments: 32
+    policy_path: 'dim904_epoch2000.pth' # 'dim278_epoch2000_fitness7000.pth'
+    device: 'cuda:7'
+
+    

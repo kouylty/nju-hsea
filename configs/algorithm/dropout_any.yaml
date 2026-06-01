@@ -1,0 +1,9 @@
+name: 'dropout_any'
+
+model:
+    _target_: algorithms.DropoutAny
+    n_init: 20
+    active_dims: 15
+    fillin_type: 'best_pos'
+    reset_freq: 1
+    inner_opt_type: 'bo'

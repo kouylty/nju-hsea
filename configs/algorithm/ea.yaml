@@ -1,0 +1,9 @@
+name: 'ea'
+
+model:
+    _target_: algorithms.EA
+    pop_size: 20
+    init_sampler_type: 'permutation' # permutation
+    selection_type: 'elite'
+    mutation_type: 'insert'
+    crossover_type: 'pmx'

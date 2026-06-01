@@ -1,0 +1,58 @@
+[2026-06-01 14:47:33,154][utils][INFO] - Global seed set to 2022
+[2026-06-01 14:47:49,808][utils][INFO] - Global seed set to 2022
+[2026-06-01 14:59:34,574][utils][INFO] - Global seed set to 2022
+[2026-06-01 14:59:35,616][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x7c13f40aeb90>, alg: <algorithms._map_elites.MAPElites object at 0x7c0e1b792410>, dims: 124
+[2026-06-01 14:59:35,641][__main__][INFO] - Use checkpoint: False
+[2026-06-01 14:59:35,641][__main__][INFO] - ------------ config -------------
+[2026-06-01 14:59:35,642][__main__][INFO] - {'epochs': 1, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 20, 'init_sampler_type': 'init_v3', 'selection_type': 'random', 'mutation_type': 'insert', 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 14:59:35,644][__main__][INFO] - --------------------------------
+[2026-06-01 17:22:39,133][utils][INFO] - Global seed set to 2022
+[2026-06-01 17:36:41,368][utils][INFO] - Global seed set to 2022
+[2026-06-01 17:36:42,369][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x79f8ec482d10>, alg: <algorithms._map_elites.MAPElites object at 0x79f6a1ddeb90>, dims: 124
+[2026-06-01 17:36:42,392][__main__][INFO] - Use checkpoint: False
+[2026-06-01 17:36:42,413][__main__][INFO] - ------------ config -------------
+[2026-06-01 17:36:42,413][__main__][INFO] - {'epochs': 4, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'insert', 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 17:36:42,413][__main__][INFO] - --------------------------------
+[2026-06-01 18:40:36,955][utils][INFO] - Global seed set to 2022
+[2026-06-01 18:40:38,610][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x7925140f1790>, alg: <algorithms._map_elites.MAPElites object at 0x791f2d201250>, dims: 124
+[2026-06-01 18:40:38,632][__main__][INFO] - Use checkpoint: False
+[2026-06-01 18:40:38,632][__main__][INFO] - ------------ config -------------
+[2026-06-01 18:40:38,633][__main__][INFO] - {'epochs': 4, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'insert', 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 18:40:38,634][__main__][INFO] - --------------------------------
+[2026-06-01 18:51:43,006][utils][INFO] - Global seed set to 2022
+[2026-06-01 18:51:43,956][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x7591e8040950>, alg: <algorithms._map_elites.MAPElites object at 0x758f9f4fcc50>, dims: 124
+[2026-06-01 18:51:43,992][__main__][INFO] - Use checkpoint: False
+[2026-06-01 18:51:43,992][__main__][INFO] - ------------ config -------------
+[2026-06-01 18:51:43,993][__main__][INFO] - {'epochs': 2, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'insert', 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 18:51:43,993][__main__][INFO] - --------------------------------
+[2026-06-01 19:27:40,405][utils][INFO] - Global seed set to 2022
+[2026-06-01 19:27:41,348][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x76a0951598d0>, alg: <algorithms._map_elites.MAPElites object at 0x769e50719750>, dims: 124
+[2026-06-01 19:27:41,376][__main__][INFO] - Use checkpoint: False
+[2026-06-01 19:27:41,377][__main__][INFO] - ------------ config -------------
+[2026-06-01 19:27:41,377][__main__][INFO] - {'epochs': 2, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'insert', 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 19:27:41,378][__main__][INFO] - --------------------------------
+[2026-06-01 19:27:44,963][matplotlib.font_manager][INFO] - generated new fontManager
+[2026-06-01 19:37:05,166][utils][INFO] - Global seed set to 2022
+[2026-06-01 19:37:06,051][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x7e48d8439dd0>, alg: <algorithms._map_elites.MAPElites object at 0x7e4315fa6a10>, dims: 124
+[2026-06-01 19:37:06,081][__main__][INFO] - Use checkpoint: False
+[2026-06-01 19:37:06,081][__main__][INFO] - ------------ config -------------
+[2026-06-01 19:37:06,081][__main__][INFO] - {'epochs': 3, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'adaptive_mix', 'adaptive_phase_epochs': 2000, 'adaptive_prior_weight': 0.7, 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 19:37:06,082][__main__][INFO] - --------------------------------
+[2026-06-01 19:56:13,044][utils][INFO] - Global seed set to 2022
+[2026-06-01 19:56:13,237][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x7a7e83c57450>, alg: <algorithms._map_elites.MAPElites object at 0x7a7e83ad90d0>, dims: 124
+[2026-06-01 19:56:13,270][__main__][INFO] - Use checkpoint: False
+[2026-06-01 19:56:13,270][__main__][INFO] - ------------ config -------------
+[2026-06-01 19:56:13,271][__main__][INFO] - {'epochs': 3, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'local_search': {'enabled': True, 'freq': 1, 'top_k': 1, 'num_neighbors': 2, 'mutation_types': ['insert', 'swap']}, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'adaptive_mix', 'adaptive_phase_epochs': 2000, 'adaptive_prior_weight': 0.7, 'dynamic_correlation_threshold': True, 'dynamic_threshold_start': None, 'dynamic_threshold_end': None, 'dynamic_threshold_epochs': 2000, 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 19:56:13,271][__main__][INFO] - --------------------------------
+[2026-06-01 20:02:25,284][utils][INFO] - Global seed set to 2022
+[2026-06-01 20:02:25,454][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x70411bd8be90>, alg: <algorithms._map_elites.MAPElites object at 0x70411a611f10>, dims: 124
+[2026-06-01 20:02:25,485][__main__][INFO] - Use checkpoint: False
+[2026-06-01 20:02:25,486][__main__][INFO] - ------------ config -------------
+[2026-06-01 20:02:25,491][__main__][INFO] - {'epochs': 20, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'local_search': {'enabled': True, 'freq': 50, 'top_k': 1, 'num_neighbors': 4, 'mutation_types': ['insert', 'swap']}, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 20, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'adaptive_mix', 'adaptive_phase_epochs': 2000, 'adaptive_prior_weight': 0.7, 'dynamic_correlation_threshold': True, 'dynamic_threshold_start': None, 'dynamic_threshold_end': None, 'dynamic_threshold_epochs': 2000, 'dynamic_threshold_warmup_size': None, 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 20:02:25,492][__main__][INFO] - --------------------------------
+[2026-06-01 20:22:29,245][utils][INFO] - Global seed set to 2022
+[2026-06-01 20:22:29,430][__main__][INFO] - func: <benchmarks.CONOPLib_124.call.EarthBenchmark object at 0x73de32d10e10>, alg: <algorithms._map_elites.MAPElites object at 0x73de2f905c10>, dims: 124
+[2026-06-01 20:22:29,492][__main__][INFO] - Use checkpoint: False
+[2026-06-01 20:22:29,492][__main__][INFO] - ------------ config -------------
+[2026-06-01 20:22:29,495][__main__][INFO] - {'epochs': 1, 'project': 'earth-278', 'seed': 2022, 'use_checkpoint': False, 'save_checkpoint': False, 'mutation': 'adaptive_mix', 'adaptive_correlation': True, 'local_search': {'enabled': False, 'freq': 50, 'top_k': 1, 'num_neighbors': 4, 'mutation_types': ['insert', 'swap']}, 'task': {'name': 'earth_124', 'file_path': None}, 'algorithm': {'name': 'map_elites', 'model': {'_target_': 'algorithms.MAPElites', 'correlation_threshold': 0.68, 'archive_size': 20, 'pop_size': 4, 'init_sampler_type': 'init_v3', 'selection_type': 'tournament', 'tournament_size': 3, 'mutation_type': 'adaptive_mix', 'adaptive_phase_epochs': 2000, 'adaptive_prior_weight': 0.7, 'dynamic_correlation_threshold': True, 'dynamic_threshold_start': None, 'dynamic_threshold_end': None, 'dynamic_threshold_epochs': 2000, 'dynamic_threshold_warmup_size': None, 'crossover_type': 'pmx', 'device': 'cpu'}}}
+[2026-06-01 20:22:29,496][__main__][INFO] - --------------------------------

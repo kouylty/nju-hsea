@@ -1,0 +1,9 @@
+name: 'dqn'
+
+model:
+    _target_: algorithms.DQN
+    pop_size: 20
+    init_sampler_type: 'permutation' # permutation
+    selection_type: 'elite'
+    policy_path: 'dim278_epoch2000_fitness7000.pth' # 'dim278_epoch2000_base.pth' # policy_path: 'dqn_dim278.pth'
+    device: 'cuda:0'

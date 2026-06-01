@@ -1,0 +1,12 @@
+name: 'sa'
+
+pop_size: 20
+
+model:
+    _target_: algorithms.SA
+    init_sampler_type: 'init_v3'
+    decay: 0.99
+    T: 100
+    update_freq: 100
+    mutation_type: insert
+    

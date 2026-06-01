@@ -1,0 +1,8 @@
+name: 'mcts'
+
+model:
+    _target_: algorithms.MCTS
+    Cp: 1
+    leaf_size: 20
+    max_propose: 20
+    solver_type: sa

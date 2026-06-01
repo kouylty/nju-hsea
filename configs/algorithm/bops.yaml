@@ -1,0 +1,14 @@
+name: 'bops'
+
+pop_size: 20
+
+model:
+    _target_: algorithms.BOPS
+    n_init: 20
+    init_sampler_type: 'permutation'
+    kernel_type: 'mallows'
+    acqf_opt_n_restarts: 10
+    ls_steps: 100
+    active_dims: null
+    fillin_type: 'best_pos'
+    device: 'cpu'

@@ -1,0 +1,7 @@
+name: 'random_group'
+
+model:
+    _target_: algorithms.RandomGroup
+    n_init: 10
+    active_dims: 10
+    
