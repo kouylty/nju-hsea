@@ -16,7 +16,7 @@ model:
     dynamic_threshold_end: null
     dynamic_threshold_epochs: 2000
     dynamic_threshold_warmup_size: null
-    crossover_type: 'pmx'
+    crossover_type: 'cycle'
     lns_enabled: False
     lns_probability: 0.1
     lns_stagnation_epochs: 100

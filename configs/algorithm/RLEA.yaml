@@ -5,6 +5,8 @@ model:
     pop_size: 20
     init_sampler_type: 'permutation' # permutation
     selection_type: 'rank_based_prioritized' # rank_based_prioritized
+    parent_selection_type: 'tournament'
+    tournament_size: 3
     mutation_type: 'mix'
     crossover_type: 'pmx'
     policy_path: 'models/dim124_epoch2000.pth' # 'dim278_epoch2000_base.pth' # policy_path: 'dqn_dim278.pth'

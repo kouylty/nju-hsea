@@ -171,9 +171,10 @@ def main(cfg: DictConfig) -> None:
         eval_results = ray.get(futures)
         return [result[0] for result in eval_results], [result[1] for result in eval_results]
 
+    rl_freq = int(cfg.get('rl_freq', 500))
     for epoch in range(epochs + 1, cfg['epochs'] + 1):
-        # 每 500 轮用一次 RL
-        use_rl = True if (alg_name == 'dqn' or 'RL' in alg_name) and (epoch % 500 == 0) else False
+        is_rl_alg = alg_name == 'dqn' or 'RL' in alg_name
+        use_rl = is_rl_alg and rl_freq > 0 and epoch % rl_freq == 0
 
         # alg.ask
         if alg_name == 'map_elites':

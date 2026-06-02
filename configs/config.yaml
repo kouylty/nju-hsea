@@ -11,6 +11,7 @@ save_checkpoint: False
 mutation: null
 adaptive_correlation: null
 com: False
+rl_freq: 500
 
 local_search:
     enabled: False

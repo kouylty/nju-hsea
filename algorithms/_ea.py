@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 class EA(BaseOptimizer):
     def __init__(
         self, dims, lb, ub, pop_size=20, init_sampler_type='permutation', selection_type='elite',
-        mutation_type='swap', crossover_type='order', policy_path=None, num_segments=None, device='cpu'
+        mutation_type='swap', crossover_type='order', parent_selection_type='random',
+        tournament_size=3, policy_path=None, num_segments=None, device='cpu'
     ):
         self.dims = dims
         self.lb = lb
@@ -25,6 +26,8 @@ class EA(BaseOptimizer):
         self.selection_type = selection_type
         self.mutation_type = mutation_type
         self.crossover_type = crossover_type
+        self.parent_selection_type = parent_selection_type
+        self.tournament_size = tournament_size
 
         self.population = []
         self.fitness = []
@@ -226,6 +229,26 @@ class EA(BaseOptimizer):
         else:
             raise NotImplementedError
 
+    def _tournament_select_parent(self, exclude_idx=None):
+        candidate_indices = np.arange(len(self.population))
+        if exclude_idx is not None and len(candidate_indices) > 1:
+            candidate_indices = candidate_indices[candidate_indices != exclude_idx]
+
+        k = min(self.tournament_size, len(candidate_indices))
+        sampled_indices = np.random.choice(candidate_indices, k, replace=False)
+        sampled_fitnesses = [self.fitness[idx] for idx in sampled_indices]
+        return sampled_indices[int(np.argmax(sampled_fitnesses))]
+
+    def _select_parent_indices(self):
+        if self.parent_selection_type == 'random':
+            return np.random.choice(range(len(self.population)), 2, replace=False)
+        elif self.parent_selection_type == 'tournament':
+            idx1 = self._tournament_select_parent()
+            idx2 = self._tournament_select_parent(exclude_idx=idx1)
+            return idx1, idx2
+        else:
+            raise NotImplementedError
+
     def to_tensor(self, x, device):
         # 确保输入数据转换为张量并移动到正确的设备
         if isinstance(x, np.ndarray):
@@ -342,7 +365,7 @@ class EA(BaseOptimizer):
             offspring.extend(self._init_samples(self.init_sampler_type, self.pop_size))
         else:
             for _ in range(self.offspring_size):
-                i, j = np.random.choice(range(self.pop_size), 2, replace=False)
+                i, j = self._select_parent_indices()
                 x1, x2, f1, f2 = self.population[i], self.population[j], self.fitness[i], self.fitness[j]
                 if use_rl:
                     next_x = self._neural_crossover_and_mutation(x1, x2, f1, f2, cur_x_best)

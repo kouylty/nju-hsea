@@ -267,11 +267,11 @@ class MAPElites(BaseOptimizer):
         if self.mutation_type == 'mix':
             # 定义每个mutation类型及其对应的概率
             mutation_options = [
-                ('swap', 0.1),
-                ('insert', 0.7),
-                ('reversal', 0.05),
-                ('shuffle', 0.1),
-                ('shift', 0.05),
+                ('swap', 0.2),
+                ('insert', 0.2),
+                ('reversal', 0.2),
+                ('shuffle', 0.2),
+                ('shift', 0.2),
             ]
             
             mutation_types, probabilities = zip(*mutation_options)

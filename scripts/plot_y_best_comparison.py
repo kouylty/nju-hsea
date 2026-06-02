@@ -10,7 +10,7 @@ def parse_args():
         description="Plot y_best comparison curves from local metrics.csv files."
     )
     parser.add_argument("--task", default="earth_124", help="Task name under results/.")
-    parser.add_argument("--algorithm", default="map_elites", help="Algorithm name under results/<task>/.")
+    parser.add_argument("--algorithm", default="RLEA", help="Algorithm name under results/<task>/.")
     parser.add_argument(
         "--runs",
         nargs="*",
@@ -108,7 +108,7 @@ def main():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    base_dir = Path("../results") / args.task / f"{args.algorithm}1"
+    base_dir = Path("../results") / args.task / f"{args.algorithm}"
     run_dirs = resolve_run_dirs(base_dir, args.runs)
     if not run_dirs:
         raise FileNotFoundError(f"No metrics.csv found under {base_dir}")
