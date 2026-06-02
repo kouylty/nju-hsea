@@ -104,7 +104,11 @@ def main(cfg: DictConfig) -> None:
     alg = hydra.utils.instantiate(alg_cfg['model'], dims=dims, lb=np.zeros(dims), ub=np.full(dims, dims-1))
     log.info(f'func: {func}, alg: {alg}, dims: {dims}')
 
-    local_result_dir = os.path.join('results', task_cfg['name'], alg_name, run_tag)
+    com = cfg.get('com', False)
+    if not isinstance(com, bool):
+        com = str(com).lower() in ['1', 'true', 'yes', 'on']
+    result_alg_name = f"{alg_name}1" if com else alg_name
+    local_result_dir = os.path.join('results', task_cfg['name'], result_alg_name, run_tag)
     os.makedirs(local_result_dir, exist_ok=True)
     metrics_path = os.path.join(local_result_dir, 'metrics.csv')
     final_summary_path = os.path.join(local_result_dir, 'final_summary.json')
@@ -267,6 +271,7 @@ def main(cfg: DictConfig) -> None:
         json.dump({
             'task': task_cfg['name'],
             'algorithm': alg_name,
+            'result_algorithm': result_alg_name,
             'seed': cfg['seed'],
             'epochs': cfg['epochs'],
             'total_evaluations': total_evaluations,

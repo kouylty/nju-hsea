@@ -108,7 +108,7 @@ def main():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    base_dir = Path("../results") / args.task / args.algorithm
+    base_dir = Path("../results") / args.task / f"{args.algorithm}1"
     run_dirs = resolve_run_dirs(base_dir, args.runs)
     if not run_dirs:
         raise FileNotFoundError(f"No metrics.csv found under {base_dir}")

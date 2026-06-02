@@ -10,6 +10,7 @@ use_checkpoint: False
 save_checkpoint: False
 mutation: null
 adaptive_correlation: null
+com: False
 
 local_search:
     enabled: False

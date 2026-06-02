@@ -33,6 +33,7 @@ lns=false
 eda=false
 threshold_accepting=false
 diversity_bonus=false
+com=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -62,6 +63,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --diversity-bonus)
             diversity_bonus="$2"
+            shift 2
+            ;;
+        --com)
+            com="$2"
             shift 2
             ;;
         *)
@@ -98,6 +103,7 @@ do
         local_search.freq=50 \
         local_search.top_k=1 \
         local_search.num_neighbors=4 \
+        com=$com \
         use_checkpoint=$use_checkpoint
     
     # # RLEA
