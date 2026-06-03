@@ -46,7 +46,6 @@ do
             adaptive_correlation=false \
             algorithm.model.dynamic_correlation_threshold=false \
             algorithm.model.lns_enabled=false \
-            algorithm.model.eda_enabled=false \
             algorithm.model.threshold_accepting_enabled=false \
             algorithm.model.diversity_bonus_enabled=false \
             local_search.enabled=false \

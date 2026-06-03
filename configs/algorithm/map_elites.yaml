@@ -23,11 +23,6 @@ model:
     lns_stagnation_probability: 0.4
     lns_remove_taxa_min: 3
     lns_remove_taxa_max: 8
-    eda_enabled: False
-    eda_stagnation_epochs: 150
-    eda_restart_probability: 0.3
-    eda_top_k: 10
-    eda_temperature: 0.2
     threshold_accepting_enabled: False
     threshold_accepting_start: 100.0
     threshold_accepting_end: 0.0

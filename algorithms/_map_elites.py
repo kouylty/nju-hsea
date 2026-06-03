@@ -37,11 +37,6 @@ class MAPElites(BaseOptimizer):
         lns_stagnation_probability = 0.4,
         lns_remove_taxa_min = 3,
         lns_remove_taxa_max = 8,
-        eda_enabled = False,
-        eda_stagnation_epochs = 150,
-        eda_restart_probability = 0.3,
-        eda_top_k = 10,
-        eda_temperature = 0.2,
         threshold_accepting_enabled = False,
         threshold_accepting_start = 100.0,
         threshold_accepting_end = 0.0,
@@ -80,11 +75,6 @@ class MAPElites(BaseOptimizer):
         self.lns_stagnation_probability = lns_stagnation_probability
         self.lns_remove_taxa_min = lns_remove_taxa_min
         self.lns_remove_taxa_max = lns_remove_taxa_max
-        self.eda_enabled = eda_enabled
-        self.eda_stagnation_epochs = eda_stagnation_epochs
-        self.eda_restart_probability = eda_restart_probability
-        self.eda_top_k = eda_top_k
-        self.eda_temperature = eda_temperature
         self.threshold_accepting_enabled = threshold_accepting_enabled
         self.threshold_accepting_start = threshold_accepting_start
         self.threshold_accepting_end = threshold_accepting_end
@@ -328,66 +318,6 @@ class MAPElites(BaseOptimizer):
             lad_pos = random.randint(fad_pos + 1, len(partial))
             partial.insert(lad_pos, lad)
         return np.array(partial, dtype=x.dtype)
-
-    def _should_use_eda(self):
-        if not self.eda_enabled:
-            return False
-        if len(self.archive) < 3:
-            return False
-        if self.no_improvement_count < self.eda_stagnation_epochs:
-            return False
-        return random.random() < self.eda_restart_probability
-
-    def _build_precedence_matrix(self):
-        top_k = min(self.eda_top_k, len(self.archive))
-        elite_indices = np.argsort(self.archive.fitnesses)[-top_k:]
-        elite_fitnesses = np.array([self.archive.fitnesses[idx] for idx in elite_indices], dtype=float)
-        weights = elite_fitnesses - np.min(elite_fitnesses)
-        if np.allclose(weights.sum(), 0.0):
-            weights = np.ones_like(weights)
-        else:
-            weights = weights + 1e-6
-
-        precedence = np.zeros((self.dims, self.dims), dtype=float)
-        for idx, weight in zip(elite_indices, weights):
-            individual = np.asarray(self.archive.individuals[idx], dtype=int)
-            positions = np.empty(self.dims, dtype=int)
-            positions[individual] = np.arange(self.dims)
-            precedence += weight * (positions[:, None] < positions[None, :])
-
-        precedence /= weights.sum()
-        np.fill_diagonal(precedence, 0.0)
-        return precedence
-
-    def _sample_from_precedence_matrix(self):
-        precedence = self._build_precedence_matrix()
-        unused = set(range(self.dims))
-        sampled = []
-        dtype = np.asarray(self.archive.individuals[0]).dtype
-
-        while unused:
-            feasible = []
-            for event in unused:
-                if event % 2 == 0 or (event - 1) not in unused:
-                    feasible.append(event)
-
-            scores = []
-            denominator = max(1, len(unused) - 1)
-            for event in feasible:
-                score = sum(precedence[event, other] for other in unused if other != event) / denominator
-                scores.append(score)
-
-            scores = np.array(scores, dtype=float)
-            temperature = max(float(self.eda_temperature), 1e-6)
-            logits = scores / temperature
-            logits -= np.max(logits)
-            probs = np.exp(logits)
-            probs /= probs.sum()
-            selected = int(np.random.choice(feasible, p=probs))
-            sampled.append(selected)
-            unused.remove(selected)
-
-        return np.array(sampled, dtype=dtype)
     
 
     def _update_desc(self, offspring):
@@ -653,9 +583,6 @@ class MAPElites(BaseOptimizer):
                                                                self.archive.fitnesses[idx1],
                                                                self.archive.fitnesses[idx2], cur_x_best)
                     self.pending_mutation_types.append(None)
-                elif self._should_use_eda():
-                    x_nxt = self._sample_from_precedence_matrix()
-                    self.pending_mutation_types.append('eda')
                 elif self._should_use_lns():
                     x_nxt = self._crossover(x1, x2)
                     x_nxt = self._lns_destroy_repair(x_nxt)

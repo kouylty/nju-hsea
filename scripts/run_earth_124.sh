@@ -30,7 +30,6 @@ device="cpu"
 adaptive_correlation=false
 local_search=false
 lns=false
-eda=false
 threshold_accepting=false
 diversity_bonus=false
 com=false
@@ -51,10 +50,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --lns)
             lns="$2"
-            shift 2
-            ;;
-        --eda)
-            eda="$2"
             shift 2
             ;;
         --threshold-accepting)
@@ -96,7 +91,6 @@ do
         mutation=$qd_mutation_type \
         adaptive_correlation=$adaptive_correlation \
         algorithm.model.lns_enabled=$lns \
-        algorithm.model.eda_enabled=$eda \
         algorithm.model.threshold_accepting_enabled=$threshold_accepting \
         algorithm.model.diversity_bonus_enabled=$diversity_bonus \
         local_search.enabled=$local_search \
