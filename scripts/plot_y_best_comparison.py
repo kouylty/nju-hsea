@@ -10,7 +10,7 @@ def parse_args():
         description="Plot y_best comparison curves from local metrics.csv files."
     )
     parser.add_argument("--task", default="earth_124", help="Task name under results/.")
-    parser.add_argument("--algorithm", default="map_elites", help="Algorithm name under results/<task>/.")
+    parser.add_argument("--algorithm", default="map_elites2", help="Algorithm name under results/<task>/.")
     parser.add_argument(
         "--runs",
         nargs="*",
