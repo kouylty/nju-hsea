@@ -8,6 +8,7 @@ import random
 from ._dqn_utils import Net, MLP, UniNet, UniNet_metadata
 from ._ea_operator import swap_mutation, insert_mutation, reversal_mutation, shuffle_mutation, shift_mutation
 from ._ea_operator import order_crossover, pmx_crossover, cycle_crossover
+from ._constraint_utils import load_event_constraints, constraint_insert_mutation, constraint_repair
 import time
 import torch
 # import ray
@@ -44,6 +45,8 @@ class MAPElites(BaseOptimizer):
         diversity_bonus_enabled = False,
         diversity_bonus_weight = 50.0,
         diversity_bonus_epochs = 2000,
+        constraint_repair_enabled = False,
+        constraint_repair_passes = 2,
         # archive_init_ratio: float = 0.8,
         archive: Optional[Archive] = None,
         policy_path=None,
@@ -82,6 +85,11 @@ class MAPElites(BaseOptimizer):
         self.diversity_bonus_enabled = diversity_bonus_enabled
         self.diversity_bonus_weight = diversity_bonus_weight
         self.diversity_bonus_epochs = diversity_bonus_epochs
+        self.constraint_repair_enabled = constraint_repair_enabled
+        self.constraint_repair_passes = constraint_repair_passes
+        self.event_constraints = None
+        if self.constraint_repair_enabled or self.mutation_type == 'constraint_insert':
+            self.event_constraints = load_event_constraints(self.dims)
         self.device = device
         print(f"Using device: {self.device}")
         self.mutation_ops = ['swap', 'insert', 'reversal', 'shuffle', 'shift']
@@ -226,8 +234,24 @@ class MAPElites(BaseOptimizer):
             return shuffle_mutation(x, repeats=n_repeats)
         elif mutation_type == 'shift':
             return shift_mutation(x)
+        elif mutation_type == 'constraint_insert':
+            return constraint_insert_mutation(x, self._get_event_constraints(), repeats=n_repeats)
         else:
             raise NotImplementedError
+
+    def _get_event_constraints(self):
+        if self.event_constraints is None:
+            self.event_constraints = load_event_constraints(self.dims)
+        return self.event_constraints
+
+    def _constraint_repair(self, x):
+        if not self.constraint_repair_enabled:
+            return x
+        return constraint_repair(
+            x,
+            self._get_event_constraints(),
+            passes=self.constraint_repair_passes,
+        )
 
     def _adaptive_prior_probs(self):
         progress = min(1.0, self.tell_count / max(1, self.adaptive_phase_epochs))
@@ -571,9 +595,9 @@ class MAPElites(BaseOptimizer):
         offsprings = []
         self.pending_mutation_types = []
         if len(self.archive) <= 2:
-            offsprings.extend(
-                self._init_samples(self.init_sampler_type,
-                                   2))
+            init_offsprings = self._init_samples(self.init_sampler_type, 2)
+            init_offsprings = [self._constraint_repair(x) for x in init_offsprings]
+            offsprings.extend(init_offsprings)
             self.pending_mutation_types.extend([None] * len(offsprings))
         else:
             for _ in range(self.offspring_size):
@@ -591,6 +615,7 @@ class MAPElites(BaseOptimizer):
                     x_nxt = self._crossover(x1, x2)
                     x_nxt, mutation_type = self._mutation(x_nxt, n_repeats)
                     self.pending_mutation_types.append(mutation_type)
+                x_nxt = self._constraint_repair(x_nxt)
                 offsprings.append(x_nxt)
 
         return offsprings, self.archive

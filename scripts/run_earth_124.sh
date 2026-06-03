@@ -32,6 +32,8 @@ local_search=false
 lns=false
 threshold_accepting=false
 diversity_bonus=false
+constraint_repair=false
+constraint_repair_passes=2
 com=false
 
 while [[ $# -gt 0 ]]; do
@@ -58,6 +60,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --diversity-bonus)
             diversity_bonus="$2"
+            shift 2
+            ;;
+        --constraint-repair)
+            constraint_repair="$2"
+            shift 2
+            ;;
+        --constraint-repair-passes)
+            constraint_repair_passes="$2"
             shift 2
             ;;
         --com)
@@ -93,6 +103,8 @@ do
         algorithm.model.lns_enabled=$lns \
         algorithm.model.threshold_accepting_enabled=$threshold_accepting \
         algorithm.model.diversity_bonus_enabled=$diversity_bonus \
+        algorithm.model.constraint_repair_enabled=$constraint_repair \
+        algorithm.model.constraint_repair_passes=$constraint_repair_passes \
         local_search.enabled=$local_search \
         local_search.freq=50 \
         local_search.top_k=1 \

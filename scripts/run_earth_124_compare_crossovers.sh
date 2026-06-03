@@ -46,6 +46,7 @@ do
             algorithm.model.lns_enabled=false \
             algorithm.model.threshold_accepting_enabled=false \
             algorithm.model.diversity_bonus_enabled=false \
+            algorithm.model.constraint_repair_enabled=false \
             local_search.enabled=false \
             com=true \
             use_checkpoint=$use_checkpoint

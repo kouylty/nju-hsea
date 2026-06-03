@@ -30,6 +30,8 @@ model:
     diversity_bonus_enabled: False
     diversity_bonus_weight: 50.0
     diversity_bonus_epochs: 2000
+    constraint_repair_enabled: False
+    constraint_repair_passes: 2
     device: 'cpu'
 
     
